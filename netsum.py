@@ -35,7 +35,6 @@ def OctetsAndMaskToDWORD_v4(strOneLine):
 
 def WordsAndMaskToLong_v6(strOneLine):
     strPermittedSymbols = '/0123456789:ABCDEFabcdef'
-
     flagWolfBillet = False
     for intK in range(0, len(strOneLine)):
         if not (strOneLine[intK] in strPermittedSymbols):
