@@ -14,11 +14,7 @@ def OctetsAndMaskToDWORD_v4(strOneLine):
             listSplitted.append(listLastOctetAndMask[0])
             listSplitted.append(listLastOctetAndMask[1])
             if (int(listSplitted[-1]) <= 255) and listSplitted[0].isdigit() and listSplitted[1].isdigit() and listSplitted[2].isdigit() and listSplitted[3].isdigit():
-                intOct1 = int(listSplitted[0])
-                intOct2 = int(listSplitted[1])
-                intOct3 = int(listSplitted[2])
-                intOct4 = int(listSplitted[3])
-                intMask = int(listSplitted[4])
+                intOct1, intOct2, intOct3, intOct4, intMask = int(listSplitted[0]), int(listSplitted[1]), int(listSplitted[2]), int(listSplitted[3]), int(listSplitted[4])
                 if (intOct1 | intOct2 | intOct3 | intOct4) <= 255:
                     intIP_DWORD = intOct4 | (intOct3 << 8) | (intOct2 << 16) | (intOct1 << 24)
                     intMASK_DWORD = ((2 ** intMask) - 1) << (32 - intMask)
@@ -101,13 +97,8 @@ def WordsAndMaskToLong_v6(strOneLine):
 
 
 def TruncateOutboundLinesToPreserveMemory():
-    if intAF == 52: # char '4'
-        pass
-    elif intAF == 54: # char '6'
-        for intK in range(0, len(listOutbound)):
-            listOutbound[intK] = listOutbound[intK][8:12]
-    else:
-        pass
+    for intK in range(0, len(listOutbound)):
+        listOutbound[intK] = listOutbound[intK][8:12]
 
 
 def UnZip128ToIPV6(intCur):
@@ -155,6 +146,7 @@ def UnZip128ToIPV6(intCur):
     else:
         strOut = ':'.join(listH)
     return strOut
+
 
 def SummarizePhase01_v4():
     while listOutbound != []:
@@ -224,6 +216,7 @@ def SummarizePhase02_v4():
             listOutbound.pop(0)
             for listD in listToDelete:
                 listOutbound.remove(listD)
+
 
 def SummarizePhase02_v6():
     while listOutbound != []:
