@@ -117,7 +117,8 @@ def RecursiveFileSearch(strTop):
 if len(sys.argv) > 1:
     RecursiveFileSearch(sys.argv[1])
 else:
-    RecursiveFileSearch('.')
+    print('Syntax  : chk_ospf.py DIRECTORY')
+    print('Example : chk_ospf.py /home/rancid/var/asr/configs')
 
 ###  end  ###
 
