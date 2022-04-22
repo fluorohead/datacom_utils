@@ -18,13 +18,13 @@ def WorkWithFile(strFN):
         list_MCASTInterfaces = []
         list_PIMInterfaces = []
         for strLine in fileIn: # searching for router ospf 1 beginning
-            if re.match('^router ospf [0-9]{1,5}$\n', strLine):
+            if re.match('^router ospf \d{1,5}$\n', strLine):
                 #print('router ospf pattern found')
                 break
         for strLine in fileIn: # searching for router ospf 1 ending
             if strLine != strPartEnding:
 #                print(strLine, end = '')
-                if re.match('^  interface.*', strLine) and (not re.match('.*Loopback.*', strLine)):
+                if re.match('^ {2}interface.*', strLine) and (not re.match('.*Loopback.*', strLine)):
                     list_OSPFInterfaces.append(strLine.strip().lstrip(strStrip))
             else:
                 break
@@ -59,7 +59,7 @@ def WorkWithFile(strFN):
             if flagMCAST_Present:
                 for strLine in fileIn: #searching for multicast-routing ending
                     if strLine != strPartEnding:
-                        if re.match('^  interface.*', strLine):
+                        if re.match('^ {2}interface.*', strLine):
                             list_MCASTInterfaces.append(strLine.strip().strip(strStrip))
                     else:
                         break
@@ -76,7 +76,7 @@ def WorkWithFile(strFN):
             if flagPIM_Present:
                 for strLine in fileIn: #searching for router pim ending
                     if strLine != strPartEnding:
-                        if re.match('^  interface.*', strLine):
+                        if re.match('^ {2}interface.*', strLine):
                             list_PIMInterfaces.append(strLine.strip().strip(strStrip))
                     else:
                         break
@@ -96,8 +96,8 @@ def WorkWithFile(strFN):
         else:
             dictResult = {'ospf': False, 'ldp': False, 'mcast': False, 'pim': False}
             #print('No interfaces found in \'router ospf\' partition.')
-    finally:
         fileIn.close()
+    finally:
         #print(f'Result dict : {dictResult}')
         return dictResult
 
