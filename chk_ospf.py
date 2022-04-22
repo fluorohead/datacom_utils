@@ -49,8 +49,7 @@ def WorkWithFile(strFN):
                 #print(f'LDP : {list_LDPInterfaces}')
             else:
                 #print('No MPLS LDP partition found')
-                fileIn.close()
-                fileIn = open(strFN, mode = 'rt')
+                fileIn.seek(0)
             for strLine in fileIn: #searching for multicast-routing beginning
                 if re.match('^multicast-routing.*', strLine):
                     #print('multicast-routing partition found')
@@ -66,8 +65,7 @@ def WorkWithFile(strFN):
                 #print(f'MCAST : {list_MCASTInterfaces}')
             else:
                 #print('No multicast-routing partition found')
-                fileIn.close()
-                fileIn = open(strFN, mode = 'rt')
+                fileIn.seek(0)
             for strLine in fileIn: #searching for router pim beginning
                 if re.match('^router pim.*', strLine):
                     #print('router pim partition found')
@@ -83,8 +81,7 @@ def WorkWithFile(strFN):
                 #print(f'PIM : {list_PIMInterfaces}')
             else:
                 #print('No router pim partition found')
-                fileIn.close()
-                fileIn = open(strFN, mode = 'rt')
+                fileIn.seek(0)
             # main searching
             for strZ in list_OSPFInterfaces:
                 if strZ not in list_LDPInterfaces:
