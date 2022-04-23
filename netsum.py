@@ -6,10 +6,8 @@ listOutbound = []
 listSummarized = []
 
 def OctetsAndMaskToDWORD_v4(strOneLine):
-    #listSplitted = re.split('\.', strOneLine)
     listSplitted = strOneLine.split(sep = '.')
     if len(listSplitted) == 4:
-        #listLastOctetAndMask = re.split('/', listSplitted[-1])
         listLastOctetAndMask = listSplitted[-1].split(sep = '/')
         if (len(listLastOctetAndMask) == 2) and listLastOctetAndMask[0].isdigit() and listLastOctetAndMask[1].isdigit():
             listSplitted.pop(-1)
@@ -40,10 +38,8 @@ def WordsAndMaskToLong_v6(strOneLine):
             flagWolfBillet = True
             break
     if (strOneLine.count('::') <= 1) and (not (':::' in strOneLine)) and (not flagWolfBillet):
-        #listSplitted = re.split(':', strOneLine)
         listSplitted = strOneLine.split(sep = ':')
         if ('/' in listSplitted[-1]) and ((listSplitted[0] != '') or strOneLine == '::/0'):
-            #list8WM = re.split('/', listSplitted[-1]) # list8WM - word number 8 and mask
             list8WM = listSplitted[-1].split(sep = '/')
             if list8WM[-1] != '':
                 listSplitted[-1] = list8WM[0]
@@ -290,9 +286,7 @@ if (len(sys.argv) == 3) and (sys.argv[1] in ['-4','-6']):
             print(strDone)
             print('Summarizing...', end = '')
             if intAF == 52: # char '4'
-                #print('Phase 1')
                 SummarizePhase01_v4()
-                #print(listSummarized)
             else:
                 TruncateOutboundLinesToPreserveMemory() # outbound now = [[mask_len, 128bit_net, 128bit_mask, 128bit_max_ip]]
                 SummarizePhase01_v6()
@@ -302,9 +296,7 @@ if (len(sys.argv) == 3) and (sys.argv[1] in ['-4','-6']):
                     listOutbound = listSummarized.copy()
                     intOutboundSize = len(listOutbound)
                     listSummarized = []
-                    #print('Phase 2...')
                     SummarizePhase02_v4()
-                    #print(listSummarized)
             else:
                 while intOutboundSize != len(listSummarized):
                     listOutbound = listSummarized.copy()
