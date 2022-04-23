@@ -27,7 +27,7 @@ def WorkWithFile(strFN):
                 break
         if list_OSPFInterfaces:
             #print(f'OSPF : {list_OSPFInterfaces}')
-            def FindPartition(strRegexp, strInterface, strExclude):
+            def FindPartition(strRegexp, strInterface):
                 flagPresent = False
                 listInterfaces = []
                 for strLine2 in fileIn:
@@ -44,9 +44,9 @@ def WorkWithFile(strFN):
                 else:
                     fileIn.seek(0)
                 return listInterfaces
-            list_LDPInterfaces = FindPartition('^mpls ldp$', '^ interface.*')
-            list_MCASTInterfaces = FindPartition('^multicast-routing$\n', '^ {2}interface.*')
-            list_PIMInterfaces = FindPartition('^router pim$\n', '^ {2}interface.*')
+            list_LDPInterfaces = FindPartition('^mpls ldp$', '^ {1}interface.*')
+            list_MCASTInterfaces = FindPartition('^multicast-routing$', '^ {2}interface.*')
+            list_PIMInterfaces = FindPartition('^router pim$', '^ {2}interface.*')
             # main searching
             for strZ in list_OSPFInterfaces:
                 if strZ not in list_LDPInterfaces:

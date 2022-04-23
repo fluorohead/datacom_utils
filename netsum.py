@@ -1,14 +1,16 @@
 # version 1.0
-import re, time, sys
+import time, sys
 
 listInbound = []
 listOutbound = []
 listSummarized = []
 
 def OctetsAndMaskToDWORD_v4(strOneLine):
-    listSplitted = re.split('\.', strOneLine)
+    #listSplitted = re.split('\.', strOneLine)
+    listSplitted = strOneLine.split(sep = '.')
     if len(listSplitted) == 4:
-        listLastOctetAndMask = re.split('/', listSplitted[-1])
+        #listLastOctetAndMask = re.split('/', listSplitted[-1])
+        listLastOctetAndMask = listSplitted[-1].split(sep = '/')
         if (len(listLastOctetAndMask) == 2) and listLastOctetAndMask[0].isdigit() and listLastOctetAndMask[1].isdigit():
             listSplitted.pop(-1)
             listSplitted.append(listLastOctetAndMask[0])
@@ -24,7 +26,7 @@ def OctetsAndMaskToDWORD_v4(strOneLine):
                     intOct3 = (intIP_DWORD >> 8) & 0xFF
                     intOct4 = (intIP_DWORD) & 0xFF
                     intMaxIP = intIP_DWORD | (2 ** (32 - intMask) - 1)
-                    listToAppend = [intOct1, intOct2, intOct3, intOct4, intMask, intIP_DWORD, intMASK_DWORD, intMaxIP] #, intMaxIP >> 24, (intMaxIP >> 16) & 0xFF, (intMaxIP >> 8) & 0xFF, intMaxIP & 0xFF]
+                    listToAppend = [intOct1, intOct2, intOct3, intOct4, intMask, intIP_DWORD, intMASK_DWORD, intMaxIP]
                     listOutbound.append(listToAppend)
                     return True
     return False
@@ -38,9 +40,11 @@ def WordsAndMaskToLong_v6(strOneLine):
             flagWolfBillet = True
             break
     if (strOneLine.count('::') <= 1) and (not (':::' in strOneLine)) and (not flagWolfBillet):
-        listSplitted = re.split(':', strOneLine)
+        #listSplitted = re.split(':', strOneLine)
+        listSplitted = strOneLine.split(sep = ':')
         if ('/' in listSplitted[-1]) and ((listSplitted[0] != '') or strOneLine == '::/0'):
-            list8WM = re.split('/', listSplitted[-1]) # list8WM - word number 8 and mask
+            #list8WM = re.split('/', listSplitted[-1]) # list8WM - word number 8 and mask
+            list8WM = listSplitted[-1].split(sep = '/')
             if list8WM[-1] != '':
                 listSplitted[-1] = list8WM[0]
                 listSplitted.append(list8WM[1])
@@ -113,7 +117,7 @@ def UnZip128ToIPV6(intCur):
     flagGoOn = True
     intGrpOffset = 0
     intZ = 0
-    # finding lenght of each repeated zeroes group and offset of each group
+    # finding lenght of each repeated zeroes group and offset of such group
     while flagGoOn:
         if intZ < (len(listZ) - 1):
             if (listZ[intZ + 1] - listZ[intZ]) == 1:
@@ -264,7 +268,7 @@ if (len(sys.argv) == 3) and (sys.argv[1] in ['-4','-6']):
         print('Error opening file.')
     else:
         for strLine in fileInput:
-            listInbound.append(strLine.replace('\n', '').replace(' ', ''))
+            listInbound.append(strLine.strip())
 
         print(f'Checking for correct IPv{chr(intAF)} addresses...', end = '')
 
