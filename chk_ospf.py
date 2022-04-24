@@ -5,7 +5,6 @@ def WorkWithFile(strFN):
     dictResult = {'ospf': True, 'ldp': True, 'mcast': True, 'pim': True}
     strPartEnding = '!\n'
     strStrip = 'interface '
-    #print(f'file > {strFN}')
     try:
         fileIn = open(strFN, mode = 'rt')
     except:
@@ -13,37 +12,25 @@ def WorkWithFile(strFN):
         dictResult = {'ospf' : False, 'ldp' : False, 'mcast' : False, 'pim' : False}
     else:
         #print('Opening Ok')
-        list_OSPFInterfaces = []
-        for strLine in fileIn: # searching for 'router ospf' beginning
-            if re.match('^router ospf \d{1,5}$\n', strLine):
-                #print('router ospf pattern found')
-                break
-        for strLine in fileIn: # searching for router ospf 1 ending
-            if strLine != strPartEnding:
-#                print(strLine, end = '')
-                if re.match('^ {2}interface.*', strLine) and (not re.match('.*Loopback.*', strLine)):
-                    list_OSPFInterfaces.append(strLine.strip().lstrip(strStrip))
-            else:
-                break
-        if list_OSPFInterfaces:
-            #print(f'OSPF : {list_OSPFInterfaces}')
-            def FindPartition(strRegexp, strInterface):
-                flagPresent = False
-                listInterfaces = []
+        def FindPartition(strRegexp, strInterface, strExcludeInterface = ''):
+            flagPresent = False
+            listInterfaces = []
+            for strLine2 in fileIn:
+                if re.match(strRegexp, strLine2):
+                    flagPresent = True
+                    break
+            if flagPresent:
                 for strLine2 in fileIn:
-                    if re.match(strRegexp, strLine2):
-                        flagPresent = True
+                    if strLine2 != strPartEnding:
+                        if re.match(strInterface, strLine2) and (not bool(re.match(strExcludeInterface, strLine2)) & bool(strExcludeInterface)):
+                            listInterfaces.append(strLine2.strip().strip(strStrip))
+                    else:
                         break
-                if flagPresent:
-                    for strLine2 in fileIn:
-                        if strLine2 != strPartEnding:
-                            if re.match(strInterface, strLine2):
-                                listInterfaces.append(strLine2.strip().strip(strStrip))
-                        else:
-                            break
-                else:
-                    fileIn.seek(0)
-                return listInterfaces
+            else:
+                fileIn.seek(0)
+            return listInterfaces
+        list_OSPFInterfaces = FindPartition('^router ospf \d{1,5}$\n', '^ {2}interface.*', '.*Loopback.*')
+        if list_OSPFInterfaces:
             list_LDPInterfaces = FindPartition('^mpls ldp$', '^ {1}interface.*')
             list_MCASTInterfaces = FindPartition('^multicast-routing$', '^ {2}interface.*')
             list_PIMInterfaces = FindPartition('^router pim$', '^ {2}interface.*')
@@ -57,15 +44,12 @@ def WorkWithFile(strFN):
                     dictResult['pim'] = False
         else:
             dictResult = {'ospf': False, 'ldp': False, 'mcast': False, 'pim': False}
-            #print('No interfaces found in \'router ospf\' partition.')
         fileIn.close()
     finally:
-        #print(f'Result dict : {dictResult}')
         return dictResult
 
 
 def RecursiveFileSearch(strTop):
-    #print(f'dir > {strTop}')
     for strNext in os.listdir(strTop):
         strNextSearchIn = f'{strTop}{os.sep}{strNext}'
         if S_ISDIR(os.stat(strNextSearchIn, follow_symlinks = True).st_mode): # is a directory
