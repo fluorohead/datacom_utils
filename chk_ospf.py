@@ -52,7 +52,7 @@ def WorkWithFile(strFN):
 def RecursiveFileSearch(strTop):
     for strNext in os.listdir(strTop):
         strNextSearchIn = f'{strTop}{os.sep}{strNext}'
-        if S_ISDIR(os.stat(strNextSearchIn, follow_symlinks = True).st_mode): # is a directory
+        if S_ISDIR(os.stat(strNextSearchIn, follow_symlinks = False).st_mode): # is a directory
             RecursiveFileSearch(strNextSearchIn)
         else: # is a file
             print(f'{strNextSearchIn} >>> ', end = '')
