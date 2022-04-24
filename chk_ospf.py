@@ -73,7 +73,7 @@ def RecursiveFileSearch(strTop):
         else: # is a file
             print(f'{strNextSearchIn} >>> ', end = '')
             for dictZ in WorkWithFile(strNextSearchIn).items():
-                strStatus = 'OK' if dictZ[1] else 'ERRORS!'
+                strStatus = '\x1B[1;32;40mOK\x1B[0;;m' if dictZ[1] else '\x1B[1;31;40mERRORS!\x1B[0;;m'
                 print(f'[{dictZ[0].upper()} : {strStatus}]', end = ' ')
             print()
 
