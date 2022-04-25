@@ -3,13 +3,14 @@ from stat import S_ISDIR
 
 def WorkWithFile(strFN):
     dictResult = {'ospf': True, 'ldp': True, 'mcast': True, 'pim': True}
+    dictFullNegative = {'ospf': False, 'ldp': False, 'mcast': False, 'pim': False}
     strPartEnding = '!\n'
     strStrip = 'interface '
     try:
         fileIn = open(strFN, mode = 'rt')
     except:
         print(f'{strFN} >>> Error opening!', file = sys.stderr)
-        dictResult = {'ospf' : False, 'ldp' : False, 'mcast' : False, 'pim' : False}
+        dictResult = dictFullNegative.copy()
     else:
         #print('Opening Ok')
         def FindPartition(strHeader, strInterf, strExclude =''):
@@ -53,7 +54,7 @@ def WorkWithFile(strFN):
                 if strZ not in list_PIMInterfaces:
                     dictResult['pim'] = False
         else:
-            dictResult = {'ospf': False, 'ldp': False, 'mcast': False, 'pim': False}
+            dictResult = dictFullNegative.copy()
         fileIn.close()
     finally:
         return dictResult
