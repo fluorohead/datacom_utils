@@ -8,7 +8,7 @@ def WorkWithFile(strFN):
     try:
         fileIn = open(strFN, mode = 'rt')
     except:
-        print('Error opening!', file = sys.stderr)
+        print(f'{strFN} >>> Error opening!', file = sys.stderr)
         dictResult = {'ospf' : False, 'ldp' : False, 'mcast' : False, 'pim' : False}
     else:
         #print('Opening Ok')
