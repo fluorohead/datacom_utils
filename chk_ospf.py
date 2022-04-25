@@ -29,7 +29,7 @@ def WorkWithFile(strFN):
             else:
                 fileIn.seek(0)
             return listInterfaces
-        list_OSPFInterfaces = FindPartition('^router ospf \d{1,5}$\n', '^ {2}interface.*', '.*Loopback.*')
+        list_OSPFInterfaces = FindPartition('^router ospf \d{1,5}$', '^ {2}interface.*', '.*Loopback.*')
         if list_OSPFInterfaces:
             list_LDPInterfaces = FindPartition('^mpls ldp$', '^ {1}interface.*')
             list_MCASTInterfaces = FindPartition('^multicast-routing$', '^ {2}interface.*')
