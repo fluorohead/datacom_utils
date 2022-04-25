@@ -1,4 +1,4 @@
-import sys, os, re
+import sys, os
 from stat import S_ISDIR
 
 def WorkWithFile(strFN):
@@ -12,28 +12,38 @@ def WorkWithFile(strFN):
         dictResult = {'ospf' : False, 'ldp' : False, 'mcast' : False, 'pim' : False}
     else:
         #print('Opening Ok')
-        def FindPartition(strRegexp, strInterface, strExcludeInterface = ''):
+        def FindPartition(strHeader, strInterf, strExclude =''):
             flagPresent = False
             listInterfaces = []
             for strLine2 in fileIn:
-                if re.match(strRegexp, strLine2):
+                if strLine2[:len(strHeader)] == strHeader:
+#               if re.match(strRegexp, strLine2):
                     flagPresent = True
+                    #print(f'found {strRegexp}')
                     break
             if flagPresent:
                 for strLine2 in fileIn:
                     if strLine2 != strPartEnding:
-                        if re.match(strInterface, strLine2) and (not bool(re.match(strExcludeInterface, strLine2)) & bool(strExcludeInterface)):
+                        #if re.match(strInterface, strLine2) and (not bool(re.match(strExcludeInterface, strLine2)) & bool(strExcludeInterface)):
+                        if (strInterf in strLine2[:len(strInterf)]) and (not((strExclude in strLine2[len(strInterf):]) & bool(strExclude))):
                             listInterfaces.append(strLine2.strip().strip(strStrip))
                     else:
                         break
             else:
                 fileIn.seek(0)
             return listInterfaces
-        list_OSPFInterfaces = FindPartition('^router ospf \d{1,5}$', '^ {2}interface.*', '.*Loopback.*')
+        #list_OSPFInterfaces = FindPartition('^router ospf \d{1,5}$', '^ {2}interface.*', '.*Loopback.*')
+        list_OSPFInterfaces = FindPartition('router ospf ', '  interface ', 'Loopback')
+        #print(list_OSPFInterfaces)
         if list_OSPFInterfaces:
+            list_LDPInterfaces = FindPartition('mpls ldp\n', ' interface ', '')
+            list_MCASTInterfaces = FindPartition('multicast-routing\n', '  interface ')
+            list_PIMInterfaces = FindPartition('router pim\n', '  interface ')
+            '''
             list_LDPInterfaces = FindPartition('^mpls ldp$', '^ {1}interface.*')
             list_MCASTInterfaces = FindPartition('^multicast-routing$', '^ {2}interface.*')
             list_PIMInterfaces = FindPartition('^router pim$', '^ {2}interface.*')
+            '''
             # main searching
             for strZ in list_OSPFInterfaces:
                 if strZ not in list_LDPInterfaces:
