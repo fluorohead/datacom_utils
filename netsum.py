@@ -53,7 +53,7 @@ def WordsAndMaskToLong_v6(strOneLine):
                     else:
                         try:
                             intInsertIndex = listSplitted.index('')
-                        except :
+                        except Exception:
                             intHowMuchToInsert = 0
                             intInsertIndex = 0
                         else:
