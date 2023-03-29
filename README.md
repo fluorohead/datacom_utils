@@ -4,7 +4,7 @@
 Script for summarizing ipv4 and ipv6 nets.
 Gets input file with a list of networks and tries to find and pop superceded networks if corresponding superior net are also present in the same list.
 At second phase tries to reduce mask length (/24 -> /23 for e.g.) and finds superceded nets again. Then the algorithm works again
-and again, reducing the mask more and more, until length of input list equals length of output list - it's the stop condition.
+and again, reducing the mask more and more, until length of input list equals length of output list - reaching stop condition.
 
 
 <b>chk_ospf.py</b>
